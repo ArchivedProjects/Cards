@@ -74,7 +74,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
 
 
 if __name__ == "__main__":
-    cards = draw_cards(decks=1, jokers=2, shuffle=False)
+    cards = draw_cards(decks=1, jokers=2, shuffle=True)
 
     # Demo For Why This Generator Needs Improvement
     # This'll Most Likely Crash Around 25 Minutes On 8 Gigs Of RAM
