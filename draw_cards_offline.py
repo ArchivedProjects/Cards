@@ -51,7 +51,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
 
     # Add Joker Cards
     for i in range(1, jokers+1):
-        joker_color = joker_colors[0] if i % 2 == 0 else joker_colors[1]
+        joker_color = joker_colors[0] if i % 2 == 1 else joker_colors[1]
 
         deck.append({
             "suit": joker_color,
@@ -74,7 +74,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
 
 
 if __name__ == "__main__":
-    cards = draw_cards(decks=1, jokers=2, shuffle=True)
+    cards = draw_cards(decks=1, jokers=2, shuffle=False)
 
     # Demo For Why This Generator Needs Improvement
     # This'll Most Likely Crash Around 25 Minutes On 8 Gigs Of RAM
