@@ -2,6 +2,9 @@ from typing import Generator
 
 import random
 
+# TODO: Determine if I should add unique ids to the cards or if I should let the game do that (for multiple decks).
+# I'll probably let the game handle that when the card is drawn as there's no real reason I need to do that internally.
+
 # This isn't a "true" generator as it first has to build the deck first.
 # What this means is, if you want 6 million decks of cards and 12 million jokers,
 # the program will take a while and potentially crash depending on RAM
