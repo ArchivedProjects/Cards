@@ -29,6 +29,14 @@ joker_colors: list = ["Black", "Red"]
 
 
 def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generator:
+    """
+        Card Drawing Function (Generates Decks For You)
+
+        @param decks: Number Of Decks You Want (52 Cards Each)
+        @param shuffle: Whether Or Not To Shuffle The Cards For You
+        @param jokers: Number Of Jokers To Add To Deck (Alternates Between Black and Red)
+        @return: Generator To Return Deck Of Cards With Dictionaries
+    """
 
     # Build My Deck Of Cards
     deck: list = []
@@ -69,8 +77,14 @@ if __name__ == "__main__":
     cards = draw_cards(decks=1, jokers=2, shuffle=True)
 
     # Demo For Why This Generator Needs Improvement
+    # This'll Most Likely Crash Around 25 Minutes On 8 Gigs Of RAM
     # cards = draw_cards(decks=6000000, jokers=6000000*2, shuffle=True)
 
+    # This Part Handles Formatting, Printing, and Retrieving The Card/Metadata From The Generator
+    header: str = "{:<16} | {:<15} | {:<6}".format("Card", "Cards Remaining", "Percentage Drawn")
+
+    print(header)
+    print("-"*len(header))
     for card in cards:
         suit = card["suit"]
         value = card["value"]
@@ -79,4 +93,4 @@ if __name__ == "__main__":
 
         percentage = 100 - ((remaining/starting)*100)
 
-        print(f"{value} of {suit} - Remaining: {remaining} - Percentage Drawn: {percentage}")
+        print("{:<16} | {:<15} | {:<6}".format(f"{value} of {suit}", remaining, f"{percentage:3.2f} %"))
