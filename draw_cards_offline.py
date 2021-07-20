@@ -49,7 +49,8 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
                 # print(f"{card} {suit['name']}")
                 deck.append({
                     "suit": suit['name'],
-                    "value": card
+                    "value": card,
+                    "code": f"{card[0]}{suit['name'][0]}"  # 10 is fine as 1 because 1 is A for Ace (for card[0])
                 })
 
     # Add Joker Cards
@@ -58,7 +59,8 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
 
         deck.append({
             "suit": joker_color,
-            "value": "Joker"
+            "value": "Joker",
+            "code": f"O{suit['name'][0]}"
         })
 
     # Shuffle Cards
@@ -84,7 +86,7 @@ if __name__ == "__main__":
     # cards = draw_cards(decks=6000000, jokers=6000000*2, shuffle=True)
 
     # This Part Handles Formatting, Printing, and Retrieving The Card/Metadata From The Generator
-    header: str = "{:<16} | {:<15} | {:<6}".format("Card", "Cards Remaining", "Percentage Drawn")
+    header: str = "{:<16} | {:<2} | {:<15} | {:<6}".format("Card", "Code", "Cards Remaining", "Percentage Drawn")
 
     print(header)
     print("-"*len(header))
@@ -93,7 +95,8 @@ if __name__ == "__main__":
         value = card["value"]
         remaining = card["remaining"]
         starting = card["starting"]
+        code = card["code"]
 
         percentage = 100 - ((remaining/starting)*100)
 
-        print("{:<16} | {:<15} | {:<6}".format(f"{value} of {suit}", remaining, f"{percentage:3.2f} %"))
+        print("{:<16} | {:<4} | {:<15} | {:<6}".format(f"{value} of {suit}", code, remaining, f"{percentage:3.2f} %"))

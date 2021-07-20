@@ -45,7 +45,8 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
                 "max_count": decks,
                 "metadata": {
                     "suit": suit['name'],
-                    "value": card
+                    "value": card,
+                    "code": f"{card[0]}{suit['name'][0]}"  # 10 is fine as 1 because 1 is A for Ace (for card[0])
                 }
             }
 
@@ -57,7 +58,8 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
     #         "max_count": math.ceil(jokers/len(joker_colors)),  # TODO: This may need some work for the latter card
     #         "metadata": {
     #             "suit": color,
-    #             "value": special_cards[0]
+    #             "value": special_cards[0],
+    #             "code": f"O{suit['name'][0]}"
     #         }
     #     }
 
