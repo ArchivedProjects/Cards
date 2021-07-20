@@ -1,11 +1,20 @@
 from typing import Generator
 
-import humanize
+import importlib
 import random
 import math
 
+# Check For Humanize Module Before Importing
+# This is so you don't have to install humanize
+#   to test this demo, but it will be supported
+#   in order to make reading nicer.
+humanize = importlib.util.find_spec("humanize")
+if humanize is not None:
+    import humanize
 
-# TODO: Note, this is still very broken. Jokers break everything!!!
+
+# TODO: Note, more than 2 Jokers when not shuffling currently breaks this.
+#   The fix is a work in progress.
 
 
 # Interestingly Enough, The First Letters Of Each Non-Number Word Is Unique (Except For Joker)
@@ -37,54 +46,58 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
 
     # This should contain 54 Card Keys Max When It's Finished (Including The Jokers)
     card_tracker: dict = {}
-    for suit in card_suits:
-        for card in card_values:
-            key = f"{card} {suit['name']}"
-            card_tracker[key] = {
-                "count": 0,
-                "max_count": decks,
-                "metadata": {
-                    "suit": suit['name'],
-                    "value": card,
-                    "code": f"{card[0]}{suit['name'][0]}"  # 10 is fine as 1 because 1 is A for Ace (for card[0])
+    if decks > 0:
+        for suit in card_suits:
+            for card in card_values:
+                key = f"{card} {suit['name']}"
+                card_tracker[key] = {
+                    "count": 0,
+                    "max_count": decks,
+                    "metadata": {
+                        "suit": suit['name'],
+                        "value": card,
+                        "code": f"{card[0]}{suit['name'][0]}"  # 10 is fine as 1 because 1 is A for Ace (for card[0])
+                    }
                 }
-            }
 
     # Add Joker Cards (2 Jokers Currently)
-    # for color in joker_colors:
-    #     key = f"{special_cards[0]} {color}"
-    #     card_tracker[key] = {
-    #         "count": 0,
-    #         "max_count": math.ceil(jokers/len(joker_colors)),  # TODO: This may need some work for the latter card
-    #         "metadata": {
-    #             "suit": color,
-    #             "value": special_cards[0],
-    #             "code": f"O{color[0]}"
-    #         }
-    #     }
+    for color in joker_colors:
+        # This ensures that Jokers are spread across colors
+        # TODO: Note, this only works with 2 colors due to `len(joker_colors)-1` and `jokers % 2`.
+        # This can be modified for an arbitrary number of colors, but that adds extra complexity
+        #   for a feature I currently have no intention of implementing at the moment.
+        max_count: int = math.ceil(jokers / len(joker_colors))
+        if joker_colors.index(color) == len(joker_colors)-1 and jokers % 2 != 0:
+            max_count: int = max_count-1
+
+        # print(f"{color}: {max_count} - Total: {jokers}")
+
+        key = f"{special_cards[0]} {color}"
+        card_tracker[key] = {
+            "count": 0,
+            "max_count": int(max_count),  # TODO: This may need some work for the latter card
+            "metadata": {
+                "suit": color,
+                "value": special_cards[0],
+                "code": f"O{color[0]}"
+            }
+        }
 
     # Yield Cards For Program
-    # total_cards: int = (decks*len(card_tracker))+(jokers-(2*decks))  # For Inclusion Of Jokers
-    total_cards: int = (decks*len(card_tracker))
+    total_cards: int = (decks*len(card_tracker))+(jokers-(2*decks))  # For Inclusion Of Jokers
     cards_remaining: int = total_cards
-    # print(f"Total Cards: {total_cards} - Cards Remaining: {cards_remaining}")
 
     while cards_remaining > 0:
         current_card_number: int = -1
         if shuffle:
             current_card_number = random.randint(0, len(card_tracker)-1)
         else:
+            # TODO: Figure Out Why 3+ Jokers Without Shuffling Freezes The Generator
             current_card_number = (total_cards - cards_remaining) % len(card_tracker)  # Returns 0 - 53 In Order
             # print(current_card_number)
 
-        # TODO: Figure out if I can toss this in favor of using the max_count system
-        # if jokers == 0 and current_card_number >= 52:
-        #     continue
-        # elif jokers == 1 and current_card_number == 53:
-        #     continue
-
+        # Card Metadata For Tracking Drawn Cards (And To Retrieve Card Info)
         card_meta = list(card_tracker.values())[current_card_number]
-        # print(card_meta)
 
         # Keep Track Of Drawn Cards
         card_meta["count"] += 1
@@ -104,14 +117,25 @@ if __name__ == "__main__":
     # Original Showcase Example
     # cards = draw_cards(decks=1, jokers=2, shuffle=True)
 
-    # Debug Showcase Example
-    # cards = draw_cards(decks=1, jokers=3, shuffle=False)
+    # Debug Showcase (Jokers) Example - More than 2 Jokers Currently Breaks This When Not Shuffling
+    cards = draw_cards(decks=1, jokers=3, shuffle=False)
+
+    # Debug Randomizer - The Randomizer Is Not Realistic Enough
+    # I'll often get between 4 and 6 of the same card in a row at the end of the drawing.
+    # The problem only gets worse as more decks are added.
+    # cards = draw_cards(decks=50, jokers=100, shuffle=True)
 
     # True Experiment
     # cards = draw_cards(decks=6000000, jokers=6000000*2, shuffle=False)
 
     # Debug True Experiment
-    cards = draw_cards(decks=6000000, jokers=0, shuffle=True)
+    # cards = draw_cards(decks=6000000, jokers=0, shuffle=True)
+
+    # Jokers Only
+    # cards = draw_cards(decks=0, jokers=147, shuffle=False)
+
+    # Jokers Only - Simple
+    # cards = draw_cards(decks=0, jokers=2, shuffle=False)
 
     # This Part Handles Formatting, Printing, and Retrieving The Card/Metadata From The Generator
     header: str = "{:<16} | {:<2} | {:<15} | {:<6}".format("Card", "Code", "Cards Remaining", "Percentage Drawn")
@@ -127,4 +151,5 @@ if __name__ == "__main__":
 
         percentage = 100 - ((remaining/starting)*100)
 
-        print("{:<16} | {:<4} | {:<15} | {:<6}".format(f"{value} of {suit}", code, humanize.intcomma(remaining), f"{percentage:3.2f} %"))
+        remaining_formatted = humanize.intcomma(remaining) if humanize is not None else remaining
+        print("{:<16} | {:<4} | {:<15} | {:<6}".format(f"{value} of {suit}", code, remaining_formatted, f"{percentage:3.2f} %"))
