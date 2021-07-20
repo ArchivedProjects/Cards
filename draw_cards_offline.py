@@ -60,7 +60,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
         deck.append({
             "suit": joker_color,
             "value": "Joker",
-            "code": f"O{suit['name'][0]}"
+            "code": f"O{joker_color[0]}"
         })
 
     # Shuffle Cards

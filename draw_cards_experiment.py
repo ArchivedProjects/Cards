@@ -59,7 +59,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
     #         "metadata": {
     #             "suit": color,
     #             "value": special_cards[0],
-    #             "code": f"O{suit['name'][0]}"
+    #             "code": f"O{color[0]}"
     #         }
     #     }
 
