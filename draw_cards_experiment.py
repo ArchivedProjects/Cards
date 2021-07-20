@@ -130,7 +130,7 @@ if __name__ == "__main__":
     # cards = draw_cards(decks=50, jokers=100, shuffle=True)
 
     # True Experiment
-    # cards = draw_cards(decks=6000000, jokers=6000000*2, shuffle=False)
+    # cards = draw_cards(decks=6000000, jokers=6000000*2, shuffle=True)
 
     # Jokers Only
     # cards = draw_cards(decks=0, jokers=147, shuffle=False)
