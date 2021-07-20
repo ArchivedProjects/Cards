@@ -13,10 +13,6 @@ if humanize is not None:
     import humanize
 
 
-# TODO: Note, more than 2 Jokers when not shuffling currently breaks this.
-#   The fix is a work in progress.
-
-
 # Interestingly Enough, The First Letters Of Each Non-Number Word Is Unique (Except For Joker)
 # A, J, Q, K, S, H, C, D
 card_values: list = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"]
@@ -92,7 +88,8 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
         if shuffle:
             current_card_number = random.randint(0, len(card_tracker)-1)
         else:
-            # TODO: Figure Out Why 3+ Jokers Without Shuffling Freezes The Generator
+            # 3+ Jokers Without Shuffling Freezes The Generator Without
+            #   The Below Mentioned Hack. The formula is in the line below.
             # 0 = (55 - 1) % 54 | 3rd Joker Card Number (Aka Ace of Spade)
             current_card_number = (total_cards - cards_remaining) % len(card_tracker)  # Returns 0 - 53 In Order
             # print(current_card_number)
@@ -117,7 +114,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
 
         # This gets reset to the proper value for some reason unknown to me.
         # This comment is in reference to the Joker hack fix.
-        # I'll need to investigate more to learn more about generators.
+        # TODO: I'll need to investigate more to learn more about generators.
         card["starting"] = total_cards
 
         yield card
@@ -125,10 +122,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
 
 if __name__ == "__main__":
     # Original Showcase Example
-    # cards = draw_cards(decks=1, jokers=2, shuffle=True)
-
-    # Debug Showcase (Jokers) Example - More than 2 Jokers Currently Breaks This When Not Shuffling
-    cards = draw_cards(decks=2, jokers=4, shuffle=False)
+    cards = draw_cards(decks=1, jokers=2, shuffle=True)
 
     # Debug Randomizer - The Randomizer Is Not Realistic Enough
     # I'll often get between 4 and 6 of the same card in a row at the end of the drawing.
@@ -138,14 +132,8 @@ if __name__ == "__main__":
     # True Experiment
     # cards = draw_cards(decks=6000000, jokers=6000000*2, shuffle=False)
 
-    # Debug True Experiment
-    # cards = draw_cards(decks=6000000, jokers=0, shuffle=True)
-
     # Jokers Only
     # cards = draw_cards(decks=0, jokers=147, shuffle=False)
-
-    # Jokers Only - Simple
-    # cards = draw_cards(decks=0, jokers=2, shuffle=False)
 
     # This Part Handles Formatting, Printing, and Retrieving The Card/Metadata From The Generator
     header: str = "{:<16} | {:<2} | {:<15} | {:<6}".format("Card", "Code", "Cards Remaining", "Percentage Drawn")
