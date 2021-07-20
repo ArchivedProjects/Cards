@@ -123,7 +123,8 @@ if __name__ == "__main__":
         value = card["value"]
         remaining = card["remaining"]
         starting = card["starting"]
+        code = card["code"]
 
         percentage = 100 - ((remaining/starting)*100)
 
-        print("{:<16} | {:<15} | {:<6}".format(f"{value} of {suit}", humanize.intcomma(remaining), f"{percentage:3.2f} %"))
+        print("{:<16} | {:<4} | {:<15} | {:<6}".format(f"{value} of {suit}", code, humanize.intcomma(remaining), f"{percentage:3.2f} %"))
