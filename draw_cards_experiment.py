@@ -75,7 +75,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
         key = f"{special_cards[0]} {color}"
         card_tracker[key] = {
             "count": 0,
-            "max_count": int(max_count),  # TODO: This may need some work for the latter card
+            "max_count": int(max_count),
             "metadata": {
                 "suit": color,
                 "value": special_cards[0],
@@ -93,6 +93,7 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
             current_card_number = random.randint(0, len(card_tracker)-1)
         else:
             # TODO: Figure Out Why 3+ Jokers Without Shuffling Freezes The Generator
+            # 0 = (55 - 1) % 54 | 3rd Joker Card Number (Aka Ace of Spade)
             current_card_number = (total_cards - cards_remaining) % len(card_tracker)  # Returns 0 - 53 In Order
             # print(current_card_number)
 
@@ -102,12 +103,21 @@ def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generat
         # Keep Track Of Drawn Cards
         card_meta["count"] += 1
         if card_meta["count"] > card_meta["max_count"]:
+            # This is a hack that moves the non-shuffle current card count
+            #   up to allow for all Jokers to be placed in a non-shuffled deck.
+            if not shuffle:
+                total_cards += 52
+
             continue
 
         cards_remaining -= 1
 
         card = card_meta["metadata"].copy()  # The .copy() prevents from editing the original dictionary
         card["remaining"] = cards_remaining
+
+        # This gets reset to the proper value for some reason unknown to me.
+        # This comment is in reference to the Joker hack fix.
+        # I'll need to investigate more to learn more about generators.
         card["starting"] = total_cards
 
         yield card
@@ -118,7 +128,7 @@ if __name__ == "__main__":
     # cards = draw_cards(decks=1, jokers=2, shuffle=True)
 
     # Debug Showcase (Jokers) Example - More than 2 Jokers Currently Breaks This When Not Shuffling
-    cards = draw_cards(decks=1, jokers=3, shuffle=False)
+    cards = draw_cards(decks=2, jokers=4, shuffle=False)
 
     # Debug Randomizer - The Randomizer Is Not Realistic Enough
     # I'll often get between 4 and 6 of the same card in a row at the end of the drawing.
