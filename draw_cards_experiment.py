@@ -140,14 +140,18 @@ if __name__ == "__main__":
 
     print(header)
     print("-"*len(header))
-    for card in cards:
-        suit = card["suit"]
-        value = card["value"]
-        remaining = card["remaining"]
-        starting = card["starting"]
-        code = card["code"]
+    try:
+        for card in cards:
+            suit = card["suit"]
+            value = card["value"]
+            remaining = card["remaining"]
+            starting = card["starting"]
+            code = card["code"]
 
-        percentage = 100 - ((remaining/starting)*100)
+            percentage = 100 - ((remaining/starting)*100)
 
-        remaining_formatted = humanize.intcomma(remaining) if humanize is not None else remaining
-        print("{:<16} | {:<4} | {:<15} | {:<6}".format(f"{value} of {suit}", code, remaining_formatted, f"{percentage:3.2f} %"))
+            remaining_formatted = humanize.intcomma(remaining) if humanize is not None else remaining
+            print("{:<16} | {:<4} | {:<15} | {:<6}".format(f"{value} of {suit}", code, remaining_formatted, f"{percentage:3.2f} %"))
+    except KeyboardInterrupt:
+        print("Exiting...")
+        exit(0)
