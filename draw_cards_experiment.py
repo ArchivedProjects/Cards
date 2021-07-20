@@ -114,7 +114,7 @@ if __name__ == "__main__":
     cards = draw_cards(decks=6000000, jokers=0, shuffle=True)
 
     # This Part Handles Formatting, Printing, and Retrieving The Card/Metadata From The Generator
-    header: str = "{:<16} | {:<15} | {:<6}".format("Card", "Cards Remaining", "Percentage Drawn")
+    header: str = "{:<16} | {:<2} | {:<15} | {:<6}".format("Card", "Code", "Cards Remaining", "Percentage Drawn")
 
     print(header)
     print("-"*len(header))
