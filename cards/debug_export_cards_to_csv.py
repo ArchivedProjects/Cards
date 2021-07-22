@@ -1,7 +1,9 @@
 # To Help Aid With Improving The Randomization Of The Next Drawn Card
+# As this file is for debugging and is not a demo, I just required humanize.
 
 from draw_cards_experiment import draw_cards
 
+import humanize
 import csv
 import os
 
@@ -34,6 +36,6 @@ if __name__ == "__main__":
         else:
             drawn_cards[code] = 1
 
-        print(f"{starting-remaining}/{starting} - {drawn_cards[code]} - {value} of {suit}")
+        print(f"{humanize.intcomma(starting-remaining)}/{humanize.intcomma(starting)} - {humanize.intcomma(drawn_cards[code])} - {value} of {suit}")
         output_writer.writerow([suit, value, code, remaining, starting, drawn_cards[code]])
         output_handle.flush()
