@@ -30,7 +30,7 @@ special_cards: list = ["Joker"]
 joker_colors: list = ["Black", "Red"]
 
 
-def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 0) -> Generator:
+def draw_cards(decks: int = 1, shuffle: bool = True, jokers: int = 2) -> Generator:
     """
         Card Drawing Function (Generates Decks For You)
 
